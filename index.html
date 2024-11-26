@@ -1,0 +1,3492 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cameron's Latin Vocabulary Tester</title>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="author" content="Aurorum" />
+		<meta
+			name="keywords"
+			content="Latin, Vocabulary, Declensions, Latin Declensions Tester, Conjugations, OCR, A-Level, Eduqas, GCSE, Vocab, Cambridge Latin Course, Latin Vocab Tester, Resources"
+		/>
+		<meta
+			name="description"
+			content="Provides a way to test your knowledge of the GCSE and A-Level Latin vocabulary list, along with a Noun Declension & Verb Conjugation Tester with both a competitive leaderboard and a practice mode."
+		/>
+		<meta property="og:title" content="Latin Vocabulary Tester" />
+		<meta property="og:type" content="website" />
+		<meta
+			property="og:description"
+			content="Provides a way to test your knowledge of the GCSE and A-Level Latin vocabulary list, along with a Noun Declension & Verb Conjugation Tester with both a competitive leaderboard and a practice mode."
+		/>
+		<meta property="og:url" content="https://latinvocabularytester.com" />
+		<meta
+			property="og:image"
+			content="https://latinvocabularytester.com/assets/screenshots/screenshot-1.png"
+		/>
+
+
+		<script type="text/javascript" src="./vocab-lists/alevel-ocr.js"></script>
+		<script type="text/javascript" src="./vocab-lists/gcse-eduqas.js"></script>
+		<script type="text/javascript" src="./vocab-lists/gcse-ocr.js"></script>
+		<script type="text/javascript" src="./vocab-lists/cambridge-latin-course.js"></script>
+		<script type="text/javascript" src="./vocab-lists/literature.js"></script>
+		<script type="text/javascript" src="./scripts.js"></script>
+		<link rel="stylesheet" type="text/css" href="./style.css" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;family=Roboto&amp;display=swap"
+			rel="stylesheet"
+		/>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-1QZXG1GX8M"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push( arguments );
+			}
+			gtag( 'js', new Date() );
+			gtag( 'config', 'G-1QZXG1GX8M' );
+		</script>
+
+		<!-- PWA -->
+		<!-- App Manifest -->
+		<link rel="apple-touch-icon" href="assets/appleIcon.png">
+		<meta name="theme-color" content="#1b2b63" />
+		<link rel="manifest" href="manifest.json">		
+
+
+	</head>
+	<body>
+		<div class="loading-screen" id="loading">
+			<div class="loading-screen-wrapper">
+				<img src="./assets/dictionary.svg" alt="" />
+				<div class="progress-bar">
+					<div class="inner-progress"></div>
+					<noscript>
+						<p class="no-script-message">
+							You need to enable JavaScript to use the Latin Vocabulary Tester
+						</p>
+					</noscript>
+				</div>
+			</div>
+		</div>
+		<div id="curtain" class="curtain is-not-triggered"></div>
+
+		<div class="header">
+			<div class="heading">
+				<h1>Cameron's Latin Vocabulary Tester</h1>
+			</div>
+
+			<div class="top-footer-toggle" onclick="toggleFooter(true)"></div>
+		</div>
+		<div id="option" class="options-menu">
+			<div class="practise-options">
+				<a onclick="startTest(true)">Practise noun declensions</a>
+				<a onclick="startTest(false, true)">Practise verb conjugations</a>
+			</div>
+			<div class="course-options">
+				<a class="alevelocrlink" onclick="changeOption('alevelocr')">A-Level (OCR)</a>
+				<a class="gcseeduqaslink" onclick="changeOption('gcseeduqas')">GCSE (Eduqas)</a>
+				<a class="gcseocrlink" onclick="changeOption('gcseocr')">GCSE (OCR)</a>
+				<a class="clclink" onclick="changeOption('clc')">CLC</a>
+				<a class="customlistlink" onclick="changeOption('custom-list')">Custom</a>
+			</div>
+		</div>
+
+		<div id="vocab-tester-wrapper" class="main-content">
+			<div class="left-content">
+				<div id="leaderboard" class="leaderboard-wrapper">
+					<p><strong>Declensions Leaderboard:</strong></p>
+					<ol>
+						<li id="first-declensions-leaderboard-1">Loading...</li>
+						<li id="first-declensions-leaderboard-2">Loading...</li>
+						<li id="first-declensions-leaderboard-3">Loading...</li>
+					</ol>
+					<p><strong>Vocabulary Leaderboard:</strong></p>
+					<ol>
+						<li id="first-vocabulary-leaderboard-7">Loading...</li>
+						<li id="first-vocabulary-leaderboard-8">Loading...</li>
+						<li id="first-vocabulary-leaderboard-9">Loading...</li>
+					</ol>
+					<p><strong>Conjugations Leaderboard:</strong></p>
+					<ol>
+						<li id="first-conjugations-leaderboard-12">Loading...</li>
+						<li id="first-conjugations-leaderboard-13">Loading...</li>
+						<li id="first-conjugations-leaderboard-14">Loading...</li>
+					</ol>
+				</div>
+
+				<div class="flashcard-settings">
+					<h3>Flashcard settings</h3>
+					<div class="toggle">
+						<p class="difficulty-text">Display Latin word first</p>
+						<label class="switch">
+							<input
+								id="flashcard-setting-switch"
+								onclick="buildFlashcard()"
+								type="checkbox"
+								checked
+							/>
+							<span class="slider round"></span>
+						</label>
+					</div>
+					<p class="flashcard-links">
+						<a onclick="shuffleFlashcards()">Shuffle flashcards</a>
+						<a id="flashcard-keyboard-shortcut-prompt" onclick="toggleFlashcardShortcutsGuide()"
+							>View keyboard shortcuts</a
+						>
+					</p>
+
+					<div
+						id="flashcard-keyboard-shortcuts"
+						class="flashcard-keyboard-shortcuts-guide is-inactive"
+					>
+						<h3>Keyboard Shortcuts</h3>
+						<ul>
+							<li>Enter key: flip flashcard</li>
+							<li>Right arrow key: next flashcard</li>
+							<li>Left arrow key: previous flashcard</li>
+							<li>S key: star or unstar flashcard</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="incorrect-words">
+					<h3 id="focus-on-title">Words to focus on</h3>
+					<p id="focus-on-description">
+						A list of words either entered incorrectly or for which the answer was revealed:
+					</p>
+					<ul id="wrong-vocab" class="wrong-vocab-list">
+						<li id="no-words-wrong">None so far - well done!</li>
+					</ul>
+					<p id="export-incorrect-vocab-sidebar" class="export-sidebar-prompt-wrapper">
+						<a
+							id="export-sidebar-prompt"
+							download="latin-incorrect-vocabulary"
+							onclick="exportIncorrectVocab()"
+							class="sidebar-prompt"
+						>
+							Export incorrect words.
+						</a>
+					</p>
+					<p id="clear-saved-vocab-sidebar" class="clear-sidebar-prompt-wrapper">
+						<a class="sidebar-prompt" onclick="clearSavedFlashcards()"> Clear all starred words </a>
+					</p>
+				</div>
+
+				<div class="select-verbs-wrapper">
+					<h3>Select verb types to practise</h3>
+
+					<div
+						onclick="constructWordTable(true)"
+						id="verb-type-table-mode-menu"
+						class="table-mode-menu"
+					>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button is-selected"
+							id="prind-button"
+						>
+							Present indicative
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="imind-button"
+						>
+							Imperfect indicative
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="pfind-button"
+						>
+							Perfect indicative
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="plind-button"
+						>
+							Pluperfect indicative
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="ftind-button"
+						>
+							Future indicative
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="fpind-button"
+						>
+							Future perfect indicative
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="prsuj-button"
+						>
+							Present subjunctive
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="imsuj-button"
+						>
+							Imperfect subjunctive
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="pfsuj-button"
+						>
+							Perfect subjunctive
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="plsuj-button"
+						>
+							Pluperfect subjunctive
+						</button>
+						<button
+							onclick="handleWordTableSelection(this)"
+							class="verb-table-option-button"
+							id="other-verbs-button"
+						>
+							Other
+						</button>
+					</div>
+
+					<div class="select-verbs">
+						<div class="indicative">
+							<div class="verb-selection-toggle">
+								<p><strong>Indicative verbs</strong></p>
+								<img
+									src="./assets/dropdown-white.svg"
+									class="dropdown"
+									alt="Dropdown"
+									onclick="toggleRow(this)"
+								/>
+							</div>
+							<div class="indicative-toggle-wrapper">
+								<div class="toggle">
+									<p>Present active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-pracind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Imperfect active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-impacind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Perfect active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-pfacind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Pluperfect active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-placind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Future active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-ftacind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Future perfect active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-fpacind"
+									/>
+								</div>
+								<div class="toggle verb-division">
+									<p>Imperatives</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-imp"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Infinitives</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-inf"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Participles</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-par"
+									/>
+								</div>
+								<div class="toggle verb-division">
+									<p>Present passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-prpaind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Imperfect passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-imppaind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Perfect passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-pfpaind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Future passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-ftpaind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Future perfect passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-fppaind"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Pluperfect passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-plpaind"
+									/>
+								</div>
+							</div>
+						</div>
+						<div class="subjunctive">
+							<div class="verb-selection-toggle">
+								<p><strong>Subjunctive verbs</strong></p>
+								<img
+									src="./assets/dropdown-white.svg"
+									class="dropdown"
+									alt="Dropdown"
+									onclick="toggleRow(this)"
+								/>
+							</div>
+							<div class="subjunctive-toggle-wrapper">
+								<div class="toggle">
+									<p>Present active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-pracsuj"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Imperfect active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-impacsuj"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Perfect active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-pfacsuj"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Pluperfect active</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-placsuj"
+									/>
+								</div>
+								<div class="toggle verb-division">
+									<p>Present passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-prpasuj"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Imperfect passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-imppasuj"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Perfect passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-pfpasuj"
+									/>
+								</div>
+								<div class="toggle">
+									<p>Pluperfect passive</p>
+									<input
+										type="checkbox"
+										checked
+										onclick="handleVerbSelection(this)"
+										id="verbs-plpasuj"
+									/>
+								</div>
+							</div>
+							<div class="toggle singular-only-option">
+								<p>
+									Try first-person and<br />
+									singular verbs only
+								</p>
+								<input
+									type="checkbox"
+									onclick="buildDeclensionOrConjugationTest(true)"
+									id="verbs-fps-option"
+								/>
+							</div>
+						</div>
+					</div>
+					<p id="verbs-warning" class="start-verbs-warning">
+						Error: you are required to select at least one verb type.
+					</p>
+				</div>
+
+				<div class="select-declensions-wrapper">
+					<h3>Select declensions and cases to practise</h3>
+					<div class="select-declensions">
+						<div class="noun-types">
+							<div class="toggle">
+								<p>First declension</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleNounSelection(this)"
+									id="declensions-noun-1"
+								/>
+							</div>
+							<div class="toggle">
+								<p>Second declension</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleNounSelection(this)"
+									id="declensions-noun-2"
+								/>
+							</div>
+							<div class="toggle other inset">
+								<p>Remove '-er' nouns</p>
+								<input
+									type="checkbox"
+									onclick="handleNounSelection(this)"
+									id="declensions-noun-2-remove-er"
+								/>
+							</div>
+							<div class="toggle">
+								<p>Third declension</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleNounSelection(this)"
+									id="declensions-noun-3"
+								/>
+							</div>
+							<div class="toggle">
+								<p>Fourth declension</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleNounSelection(this)"
+									id="declensions-noun-4"
+								/>
+							</div>
+							<div class="toggle">
+								<p>Fifth declension</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleNounSelection(this)"
+									id="declensions-noun-5"
+								/>
+							</div>
+							<div class="toggle other neuter">
+								<p>Remove neuter nouns</p>
+								<input
+									type="checkbox"
+									onclick="handleNounSelection(this)"
+									id="declensions-neuter"
+								/>
+							</div>
+						</div>
+						<div class="case-types">
+							<div class="toggle">
+								<p>Nominative</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleCaseSelection(this)"
+									id="cases-nominative"
+								/>
+							</div>
+							<div class="toggle">
+								<p>Vocative</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleCaseSelection(this)"
+									id="cases-vocative"
+								/>
+							</div>
+							<div class="toggle">
+								<p>Accusative</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleCaseSelection(this)"
+									id="cases-accusative"
+								/>
+							</div>
+							<div class="toggle">
+								<p>Genitive</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleCaseSelection(this)"
+									id="cases-genitive"
+								/>
+							</div>
+							<div class="toggle">
+								<p>Dative</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleCaseSelection(this)"
+									id="cases-dative"
+								/>
+							</div>
+							<div class="toggle">
+								<p>Ablative</p>
+								<input
+									type="checkbox"
+									checked
+									onclick="handleCaseSelection(this)"
+									id="cases-ablative"
+								/>
+							</div>
+						</div>
+					</div>
+					<p id="declensions-warning" class="start-declensions-warning">
+						Error: you are required to select at least one declension and case.
+					</p>
+				</div>
+
+				<div class="countdown-clock-circle">
+					<h2 id="countdown-clock-time-left">120</h2>
+					<svg width="160" height="160" xmlns="https://www.w3.org/2000/svg">
+						<g>
+							<circle
+								id="countdown-clock-circle"
+								class="countdown-clock-circle-animation"
+								r="69.85699"
+								cy="81"
+								cx="81"
+								stroke-width="8"
+								stroke="#6fdb6f"
+								fill="none"
+							/>
+						</g>
+					</svg>
+				</div>
+			</div>
+			<div class="right-content">
+				<div id="vocab-test-competition" class="competition-introduction">
+					<p id="competition-countdown" class="competition-countdown">5</p>
+					<p id="competition-correction"></p>
+					<p id="competition-warning">
+						You have <strong>two minutes</strong> to <span id="competition-challenge"></span>! If
+						you get one wrong, your attempt will be over.
+					</p>
+					<p class="show-word-table-toggle show-word-table-toggle-competition">
+						<a id="word-table-prompt-competitive" onclick="toggleWordTable(true)">Show table</a>
+					</p>
+				</div>
+				<div id="vocab-test-end-competition" class="competition-conclusion">
+					<div id="submit-name" class="leaderboard-submit-name">
+						<input type="text" id="leaderboard-name-input" maxlength="24" placeholder="Caecilius" />
+						<div class="options-wrapper compact-options">
+							<button class="option-button" onclick="leaderboardSubmitName()">
+								<img class="laurel-image" src="./assets/laurel.svg" alt="" />
+								<p id="leaderboard-button-submit">Submit name</p>
+							</button>
+						</div>
+					</div>
+					<p id="leaderboard-valid-name-warning" class="valid-name-warning">
+						Error: please enter a valid name which you would like to appear on the Leaderboard.
+					</p>
+					<div id="grammar-info-competition" class="submitted-grammar-info">
+						<img src="./assets/gladiator.svg" alt="" />
+						<p>
+							Tip: you entered the <strong><span id="grammar-form-competition"></span></strong> of
+							this <span id="grammar-type-competition"></span>!
+						</p>
+					</div>
+				</div>
+				<div id="vocab-flashcards" class="vocab-flashcards-wrapper">
+					<a id="star-flashcard" onclick="starFlashcard()" class="flashcard-star-button">
+						<svg viewBox="0 0 24 24" class="star-gridicon">
+							<g>
+								<path
+									d="M12,6.308l1.176,3.167l0.347,0.936l0.997,0.041l3.374,0.139l-2.647,2.092l-0.784,0.62l0.27,0.962l0.911,3.249l-2.814-1.871
+							L12,15.09l-0.83,0.552l-2.814,1.871l0.911-3.249l0.27-0.962l-0.784-0.62L6.105,10.59l3.374-0.139l0.997-0.041l0.347-0.936L12,6.308
+							 M12,2L9.418,8.953L2,9.257l5.822,4.602L5.82,21L12,16.891L18.18,21l-2.002-7.141L22,9.257l-7.418-0.305L12,2L12,2z"
+								></path>
+							</g>
+						</svg>
+						<svg viewBox="0 0 24 24" class="filled-star-gridicon">
+							<g>
+								<polygon
+									points="12,2 14.582,8.953 22,9.257 16.178,13.859 18.18,21 12,16.891 5.82,21 7.822,13.859 2,9.257 9.418,8.953"
+								></polygon>
+							</g>
+						</svg>
+					</a>
+					<div id="flashcard" class="flashcard-container" number="0" onclick="flipFlashcard()">
+						<div class="front-flashcard"><p id="front-flashcard">Front Side</p></div>
+						<div class="back-flashcard"><p id="back-flashcard">Back Side</p></div>
+					</div>
+					<p class="previous-list-flashcard-message">
+						This is a saved card from a previous list.
+						<a onclick="buildFlashcard()">Return to current list.</a>
+					</p>
+					<div class="flashcard-settings-wrapper">
+						<p id="flashcard-count" class="flashcard-counter">0/10</p>
+						<div class="flashcard-arrows">
+							<a
+								id="left-flashcard-button"
+								onclick="buildFlashcard('previous')"
+								class="flashcard-option-button"
+								><svg viewBox="0 0 24 24" class="arrow-gridicon">
+									<g><path d="M14 20l-8-8 8-8 1.414 1.414L8.828 12l6.586 6.586"></path></g></svg
+							></a>
+							<a
+								id="right-flashcard-button"
+								onclick="buildFlashcard('next')"
+								class="flashcard-option-button"
+								><svg viewBox="0 0 24 24" class="arrow-gridicon">
+									<g><path d="M10 20l8-8-8-8-1.414 1.414L15.172 12l-6.586 6.586"></path></g></svg
+							></a>
+						</div>
+					</div>
+				</div>
+				<div id="vocab-tester" class="vocab-tester-wrapper">
+					<strong><p id="vocab-question"></p></strong>
+					<p id="vocab-question-details"></p>
+					<p id="wrong-answer" style="display: none">Not quite - try again!</p>
+
+					<p class="progress-indicator">
+						<span id="progress-indicator-changing">0</span
+						><span id="progress-indicator-slash">/</span><span id="progress-indicator-set"></span>
+					</p>
+					<div class="progress-bar">
+						<div class="inner-progress" id="progress-bar-content" style="width: 0%"></div>
+					</div>
+
+					<div class="vocab-submit-answer-wrapper">
+						<p class="vocab-submit-prompt">
+							Enter the <span id="vocab-submit-first-person-warning"></span
+							><span id="vocab-submit-word-form">root meaning</span> in the box below:
+						</p>
+						<input
+							type="text"
+							id="vocab-answer"
+							autocomplete="off"
+							autocorrect="off"
+							autocapitalize="off"
+							spellcheck="false"
+						/>
+						<div class="vocab-submit-buttons">
+							<input
+								type="submit"
+								class="reveal-answer-button"
+								id="reveal-answer"
+								value="Reveal answer"
+								onclick="checkAnswer(true)"
+							/>
+							<input
+								type="submit"
+								class="submit-answer-button"
+								value="Submit"
+								onclick="checkAnswer(false)"
+							/>
+						</div>
+						<div id="grammar-info" class="submitted-grammar-info">
+							<img src="./assets/gladiator.svg" alt="" />
+							<p>
+								Tip: you entered the <strong><span id="grammar-form"></span></strong> of this
+								<span id="grammar-type"></span>!
+							</p>
+						</div>
+						<p id="vocab-times-wrong" class="times-wrong">
+							Incorrectly answered: <span id="vocab-incorrect-count">0</span> times
+						</p>
+						<p class="show-word-table-toggle">
+							<a onclick="toggleTableMode()">Switch to table mode</a>
+							<a id="word-table-prompt" onclick="toggleWordTable(true)">Show table</a>
+						</p>
+					</div>
+				</div>
+
+				<div id="complete" class="celebration">
+					<div class="confetti">
+						<img src="./assets/confetti.png" width="180" />
+					</div>
+					<h3>
+						Congratulations - you've completed all <span id="celebration-word-count"></span> words!
+					</h3>
+					<p id="retry-test-prompt" class="try-retest-prompt is-inactive">
+						Click the button below if you'd like to focus on the incorrectly answered words!
+						<a
+							id="export-prompt"
+							download="latin-incorrect-vocabulary"
+							onclick="exportIncorrectVocab()"
+							class="export-prompt"
+						>
+							Export incorrect words.
+						</a>
+					</p>
+
+					<div class="complete-actions options-wrapper compact-options">
+						<button
+							id="retry-test-button"
+							class="option-button is-inactive"
+							onclick="startRetryTest()"
+						>
+							<img src="./assets/scroll.svg" alt="" />
+							<p>Try incorrect words</p>
+						</button>
+						<button class="option-button" onclick="resetTest()">
+							<img src="./assets/helmet.svg" alt="" />
+							<p>Reset test</p>
+						</button>
+					</div>
+				</div>
+			</div>
+			<div class="further-content" id="word-table">
+				<div class="noun-table">
+					<table>
+						<thead>
+							<tr>
+								<th></th>
+								<th>Singular</th>
+								<th>Plural</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Nom.</td>
+								<td id="noms-slot"></td>
+								<td id="nomp-slot"></td>
+							</tr>
+							<tr>
+								<td>Voc.</td>
+								<td id="vocs-slot"></td>
+								<td id="vocp-slot"></td>
+							</tr>
+							<tr>
+								<td>Acc.</td>
+								<td id="accs-slot"></td>
+								<td id="accp-slot"></td>
+							</tr>
+							<tr>
+								<td>Gen.</td>
+								<td id="gens-slot"></td>
+								<td id="genp-slot"></td>
+							</tr>
+							<tr>
+								<td>Dat.</td>
+								<td id="dats-slot"></td>
+								<td id="datp-slot"></td>
+							</tr>
+							<tr>
+								<td>Abl.</td>
+								<td id="abls-slot"></td>
+								<td id="ablp-slot"></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="verb-tables">
+					<div class="toggle verb-table-select-wrapper word-table-select-wrapper">
+						<p>Select table</p>
+						<select onchange="constructWordTable(true)" id="verb-type-table-select" size="1">
+							<option value="prind-table">Present indicative</option>
+							<option value="imind-table">Imperfect indicative</option>
+							<option value="pfind-table">Perfect indicative</option>
+							<option value="plind-table">Pluperfect indicative</option>
+							<option value="ftind-table">Future indicative</option>
+							<option value="fpind-table">Future perfect indicative</option>
+							<option value="prsuj-table">Present subjunctive</option>
+							<option value="imsuj-table">Imperfect subjunctive</option>
+							<option value="pfsuj-table">Perfect subjunctive</option>
+							<option value="plsuj-table">Pluperfect subjunctive</option>
+							<option value="other-verbs-table">Other</option>
+						</select>
+					</div>
+
+					<p id="vocab-question-table-mode"></p>
+					<p id="vocab-question-table-mode-details"></p>
+
+					<div id="prind-table" class="verb-table">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>present indicative</strong> in the table below
+						</p>
+						<p class="verb-table-title">Present indicative</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="pracind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpaind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="pracind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpaind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="pracind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpaind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="pracind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpaind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="pracind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpaind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="pracind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpaind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="pfind-table" class="verb-table">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>perfect indicative</strong> in the table below
+						</p>
+						<p class="verb-table-title">Perfect indicative</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="pfacind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpaind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="pfacind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpaind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="pfacind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpaind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="pfacind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpaind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="pfacind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpaind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="pfacind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpaind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="imind-table" class="verb-table">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>imperfect indicative</strong> in the table below
+						</p>
+						<p class="verb-table-title">Imperfect indicative</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="impacind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppaind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="impacind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppaind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="impacind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppaind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="impacind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppaind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="impacind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppaind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="impacind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppaind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="plind-table" class="verb-table">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>pluperfect indicative</strong> in the table below
+						</p>
+						<p class="verb-table-title">Pluperfect indicative</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="placind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpaind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="placind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpaind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="placind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpaind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="placind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpaind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="placind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpaind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="placind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpaind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="ftind-table" class="verb-table">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>future indicative</strong> in the table below
+						</p>
+						<p class="verb-table-title">Future indicative</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="ftacind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="ftpaind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="ftacind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="ftpaind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="ftacind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="ftpaind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="ftacind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="ftpaind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="ftacind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="ftpaind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="ftacind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="ftpaind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="fpind-table" class="verb-table">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>future perfect indicative</strong> in the table below
+						</p>
+						<p class="verb-table-title">Future perfect indicative</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="fpacind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="fppaind1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="fpacind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="fppaind2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="fpacind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="fppaind3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="fpacind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="fppaind1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="fpacind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="fppaind2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="fpacind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="fppaind3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="prsuj-table" class="verb-table suj">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>present subjunctive</strong> in the table below
+						</p>
+						<p class="verb-table-title">Present subjunctive</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="pracsuj1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpasuj1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="pracsuj2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpasuj2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="pracsuj3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpasuj3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="pracsuj1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpasuj1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="pracsuj2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpasuj2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="pracsuj3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="prpasuj3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="pfsuj-table" class="verb-table suj">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>perfect subjunctive</strong> in the table below
+						</p>
+						<p class="verb-table-title">Perfect subjunctive</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="pfacsuj1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpasuj1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="pfacsuj2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpasuj2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="pfacsuj3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpasuj3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="pfacsuj1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpasuj1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="pfacsuj2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpasuj2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="pfacsuj3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="pfpasuj3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="imsuj-table" class="verb-table suj">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>imperfect subjunctive</strong> in the table below
+						</p>
+						<p class="verb-table-title">Imperfect subjunctive</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="impacsuj1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppasuj1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="impacsuj2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppasuj2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="impacsuj3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppasuj3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="impacsuj1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppasuj1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="impacsuj2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppasuj2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="impacsuj3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppasuj3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="plsuj-table" class="verb-table suj">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>pluperfect subjunctive</strong> in the table below
+						</p>
+						<p class="verb-table-title">Pluperfect subjunctive</p>
+						<table>
+							<thead>
+								<tr>
+									<th></th>
+									<th>Active</th>
+									<th>Passive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Sing.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="placsuj1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpasuj1s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="placsuj2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpasuj2s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="placsuj3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpasuj3s-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>Pl.</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>1st</td>
+									<td id="placsuj1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpasuj1pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>2nd</td>
+									<td id="placsuj2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpasuj2pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+								<tr>
+									<td>3rd</td>
+									<td id="placsuj3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="plpasuj3pl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<div id="other-verbs-table" class="verb-table">
+						<p class="table-mode-prompt">
+							Conjugate the <strong>infinitives, participles and imperatives</strong> in the tables
+							below
+						</p>
+						<p class="verb-table-title">Other</p>
+						<table>
+							<thead>
+								<tr>
+									<th>Present infinitive</th>
+									<th>Perfect infinitive</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td id="infpr-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="infpf-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<table>
+							<thead>
+								<tr>
+									<th>Present active participle</th>
+									<th>Perfect passive participle</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td id="pap-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="ppp-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<table>
+							<thead>
+								<tr>
+									<th>Singular active imperative</th>
+									<th>Plural active imperative</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td id="imps-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+									<td id="imppl-slot">
+										<input
+											type="text"
+											spellcheck="false"
+											autocapitalize="off"
+											autocorrect="off"
+											autocomplete="off"
+										/>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<div class="verb-table-settings">
+					<div class="verb-table-settings-inner">
+						<div class="toggle word-table-select-wrapper">
+							<p>Select word:</p>
+							<select onchange="constructWordTable()" id="word-table-select" size="1"></select>
+						</div>
+						<div class="toggle subjunctive-verb-table-toggle">
+							<p style="margin: 0">Show subjunctive tables</p>
+							<input type="checkbox" onclick="handleSubjunctiveTableSelection(this)" />
+						</div>
+					</div>
+					<p class="show-enhanced-verb-table-prompt">
+						<a onclick="toggleEnhancedWordTable()">Show all tables together</a>
+					</p>
+					<p class="declension-return-to-test-prompt">
+						<a id="return-to-test-prompt" onclick="toggleWordTable(false)">Return to test</a>
+					</p>
+					<p class="table-mode-options">
+						<a id="toggle-table-mode-prompt" onclick="toggleTableMode()">Switch to regular mode</a>
+						<a onclick="checkTableModeAnswer()">Check answers</a>
+						<a onclick="generateNewTableWord()">Generate new word</a>
+					</p>
+					<p class="verb-tables-heading">Verb Tables</p>
+				</div>
+			</div>
+		</div>
+		<div id="vocab-selector" class="main-content">
+			<div class="left-content">
+				<div id="leaderboard" class="leaderboard-wrapper">
+					<p><strong>Declensions Leaderboard:</strong></p>
+					<ol>
+						<li id="declensions-leaderboard-1">Loading...</li>
+						<li id="declensions-leaderboard-2">Loading...</li>
+						<li id="declensions-leaderboard-3">Loading...</li>
+					</ol>
+					<p><strong>Vocabulary Leaderboard:</strong></p>
+					<ol>
+						<li id="vocabulary-leaderboard-7">Loading...</li>
+						<li id="vocabulary-leaderboard-8">Loading...</li>
+						<li id="vocabulary-leaderboard-9">Loading...</li>
+					</ol>
+					<p><strong>Conjugations Leaderboard:</strong></p>
+					<ol>
+						<li id="conjugations-leaderboard-12">Loading...</li>
+						<li id="conjugations-leaderboard-13">Loading...</li>
+						<li id="conjugations-leaderboard-14">Loading...</li>
+					</ol>
+				</div>
+				<h3 class="start-button-wrapper-text">Begin vocabulary test</h3>
+				<div id="start-button" class="start-button-wrapper is-inactive">
+					<img onclick="startTest()" src="./assets/start.svg" alt="" />
+					<div class="start-vocab-options">
+						<a class="selected-words-prompt" onclick="startFlashcards()"
+							>Practice with flashcards</a
+						>
+						<a class="selected-words-prompt" onclick="toggleVocabSelectionTable(true)"
+							>View selected words</a
+						>
+					</div>
+				</div>
+				<p class="starting-warning">
+					You need to select some categories before beginning the test!
+				</p>
+				<div id="test-settings" class="test-settings-wrapper">
+					<h3>Configure test settings</h3>
+					<div class="toggle">
+						<p class="difficulty-text">
+							Enable hard difficulty (include English to Latin questions)
+						</p>
+						<label class="switch">
+							<input id="hardCheckbox" onclick="changeDifficulty()" type="checkbox" checked />
+							<span class="slider round"></span>
+						</label>
+					</div>
+
+					<div class="toggle extreme-difficulty">
+						<p class="difficulty-text">
+							Enable extreme difficulty (answer every question in Latin)
+						</p>
+						<input type="checkbox" id="extremeCheckbox" />
+					</div>
+
+					<div class="toggle">
+						<p>Limit number of words to be tested on</p>
+						<input type="checkbox" onclick="toggleLimit()" id="wordLimitCheckbox" />
+					</div>
+
+					<div class="toggle extreme-difficulty max-word-prompt" id="maxWordSelect">
+						<p>Select maximum number of words to be tested on</p>
+						<select id="max-word-select" size="1"></select>
+					</div>
+
+					<div class="toggle">
+						<p>Filter words based on their starting character in Latin</p>
+						<div class="configure-values">
+							<input
+								onkeypress="updateLetterLimit()"
+								type="text"
+								id="min-vocab-value"
+								value="a"
+								placeholder="a"
+							/>
+							<span>to</span>
+							<input
+								onkeypress="updateLetterLimit()"
+								type="text"
+								id="max-vocab-value"
+								value="z"
+								placeholder="z"
+							/>
+						</div>
+					</div>
+				</div>
+
+				<div class="file-upload">
+					<p>Enter a file obtained by previously completing this test to include those words.</p>
+					<input type="file" accept=".csv" id="fileupload" />
+				</div>
+
+				<div class="advanced-mode">
+					<h3>Advanced mode</h3>
+					<p>
+						These features are much more complicated to set up - please get in touch if you wish to
+						use them.
+					</p>
+					<div class="file-upload">
+						<p>Upload your own lists with a JSON or CSV file.</p>
+						<input type="file" accept=".json, .csv" id="advancedfileupload" />
+					</div>
+				</div>
+			</div>
+
+			<div class="right-content">
+				<div id="competitive-mode">
+					<div class="options-wrapper">
+						<button class="option-button" onclick="startCompetition('declension')">
+							<img src="./assets/helmet.svg" alt="" />
+							<p>Start declension test</p>
+						</button>
+						<button class="option-button" onclick="startCompetition('vocab')">
+							<img src="./assets/colosseum.svg" alt="" />
+							<p>Start vocabulary test</p>
+						</button>
+						<button class="option-button" onclick="startCompetition('conjugation')">
+							<img src="./assets/scroll.svg" alt="" />
+							<p>Start conjugation test</p>
+						</button>
+					</div>
+				</div>
+				<div id="practise-mode">
+					<a
+						id="select-all-mobile"
+						class="select-all-option select-all-option-mobile"
+						onclick="selectAll()"
+						>Select all</a
+					>
+					<div class="literature-vocabulary">
+						<div class="row-wrapper ovid-vocabulary">
+							<div class="literature-heading">
+								<p>The lists below are based on Mathew Owen's "Ovid Unseens" book.</p>
+							</div>
+							<div class="button-group">
+								<button
+									class="vocab-type"
+									id="ovid-list-0"
+									onclick="formAcceptableVocab('ovid-list-0')"
+								>
+									<p>Starter Words</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-1"
+									onclick="formAcceptableVocab('ovid-list-1')"
+								>
+									<p>List 1</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-2"
+									onclick="formAcceptableVocab('ovid-list-2')"
+								>
+									<p>List 2</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-3"
+									onclick="formAcceptableVocab('ovid-list-3')"
+								>
+									<p>List 3</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-4"
+									onclick="formAcceptableVocab('ovid-list-4')"
+								>
+									<p>List 4</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-5"
+									onclick="formAcceptableVocab('ovid-list-5')"
+								>
+									<p>List 5</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-6"
+									onclick="formAcceptableVocab('ovid-list-6')"
+								>
+									<p>List 6</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-7"
+									onclick="formAcceptableVocab('ovid-list-7')"
+								>
+									<p>List 7</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-8"
+									onclick="formAcceptableVocab('ovid-list-8')"
+								>
+									<p>List 8</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-9"
+									onclick="formAcceptableVocab('ovid-list-9')"
+								>
+									<p>List 9</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="ovid-list-10"
+									onclick="formAcceptableVocab('ovid-list-10')"
+								>
+									<p>List 10</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper prose-vocabulary">
+							<div class="literature-heading">
+								<p>
+									The lists below are based on Mathew Owen's "Prose Unseens for A-Level Latin" book.
+								</p>
+							</div>
+							<div class="button-group">
+								<button
+									class="vocab-type"
+									id="prose-list-0"
+									onclick="formAcceptableVocab('prose-list-0')"
+								>
+									<p>Starter Words</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-1"
+									onclick="formAcceptableVocab('prose-list-1')"
+								>
+									<p>List 1</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-2"
+									onclick="formAcceptableVocab('prose-list-2')"
+								>
+									<p>List 2</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-3"
+									onclick="formAcceptableVocab('prose-list-3')"
+								>
+									<p>List 3</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-4"
+									onclick="formAcceptableVocab('prose-list-4')"
+								>
+									<p>List 4</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-5"
+									onclick="formAcceptableVocab('prose-list-5')"
+								>
+									<p>List 5</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-6"
+									onclick="formAcceptableVocab('prose-list-6')"
+								>
+									<p>List 6</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-7"
+									onclick="formAcceptableVocab('prose-list-7')"
+								>
+									<p>List 7</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-8"
+									onclick="formAcceptableVocab('prose-list-8')"
+								>
+									<p>List 8</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-9"
+									onclick="formAcceptableVocab('prose-list-9')"
+								>
+									<p>List 9</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-10"
+									onclick="formAcceptableVocab('prose-list-10')"
+								>
+									<p>List 10</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="prose-list-datives"
+									onclick="formAcceptableVocab('prose-list-datives')"
+								>
+									<p>Predicative datives</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper john-taylor-vocabulary">
+							<div class="literature-heading">
+								<p>This list is based on John Taylor's "300 Common Words for Verse Unseens".</p>
+							</div>
+							<div class="button-group">
+								<button
+									class="vocab-type"
+									id="john-taylor-verse"
+									onclick="formAcceptableVocab('john-taylor-verse')"
+								>
+									<p>John Taylor list</p>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="categories">
+						<div class="row-wrapper common-verbs">
+							<div class="row-header">
+								<p>Common verbs</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+							<div class="row-1 button-group">
+								<button class="vocab-type" id="verb 1" onclick="formAcceptableVocab('verb 1')">
+									<p>Verb 1</p>
+								</button>
+								<button class="vocab-type" id="verb 2" onclick="formAcceptableVocab('verb 2')">
+									<p>Verb 2</p>
+								</button>
+								<button class="vocab-type" id="verb 3" onclick="formAcceptableVocab('verb 3')">
+									<p>Verb 3</p>
+								</button>
+								<button class="vocab-type" id="verb 4" onclick="formAcceptableVocab('verb 4')">
+									<p>Verb 4</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper rare-verbs">
+							<div class="row-header">
+								<p>Rare verbs</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+							<div class="row-2 button-group">
+								<button
+									class="vocab-type"
+									id="verb 1 dep"
+									onclick="formAcceptableVocab('verb 1 dep')"
+								>
+									<p>Verb 1 - Deponents</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="verb 2 dep"
+									onclick="formAcceptableVocab('verb 2 dep')"
+								>
+									<p>Verb 2 - Deponents</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="verb 3 dep"
+									onclick="formAcceptableVocab('verb 3 dep')"
+								>
+									<p>Verb 3 - Deponents</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="verb 4 dep"
+									onclick="formAcceptableVocab('verb 4 dep')"
+								>
+									<p>Verb 4 - Deponents</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="verb irreg"
+									onclick="formAcceptableVocab('verb irreg')"
+								>
+									<p>Irregular Verbs</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper common-nouns">
+							<div class="row-header">
+								<p>Common nouns</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+							<div class="row-3 button-group">
+								<button class="vocab-type" id="noun 1" onclick="formAcceptableVocab('noun 1')">
+									<p>Noun 1</p>
+								</button>
+								<button class="vocab-type" id="noun 2" onclick="formAcceptableVocab('noun 2')">
+									<p>Noun 2</p>
+								</button>
+								<button class="vocab-type" id="noun 3" onclick="formAcceptableVocab('noun 3')">
+									<p>Noun 3</p>
+								</button>
+								<button class="vocab-type" id="noun 4" onclick="formAcceptableVocab('noun 4')">
+									<p>Noun 4</p>
+								</button>
+								<button class="vocab-type" id="noun 5" onclick="formAcceptableVocab('noun 5')">
+									<p>Noun 5</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper miscellaneous-nouns">
+							<div class="row-header">
+								<p>Miscellaneous nouns</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+							<div class="row-4 button-group">
+								<button
+									class="vocab-type"
+									id="noun irreg"
+									onclick="formAcceptableVocab('noun irreg')"
+								>
+									<p>Irregular Nouns</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="noun phrase"
+									onclick="formAcceptableVocab('noun phrase')"
+								>
+									<p>Noun Phrases</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="noun & adj"
+									onclick="formAcceptableVocab('noun & adj')"
+								>
+									<p>Noun &amp; Adjectives</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper">
+							<div class="row-header">
+								<p>Other</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+							<div class="row-5 button-group">
+								<button class="vocab-type" id="adj" onclick="formAcceptableVocab('adj')">
+									<p>Adjectives</p>
+								</button>
+								<button class="vocab-type" id="adverb" onclick="formAcceptableVocab('adverb')">
+									<p>Adverbs</p>
+								</button>
+								<button
+									class="vocab-type"
+									id="conjunction"
+									onclick="formAcceptableVocab('conjunction')"
+								>
+									<p>Conjunctions</p>
+								</button>
+								<button class="vocab-type" id="prep" onclick="formAcceptableVocab('prep')">
+									<p>Prepositions</p>
+								</button>
+								<button class="vocab-type" id="pron" onclick="formAcceptableVocab('pron')">
+									<p>Pronouns</p>
+								</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="custom-lists">
+						<div class="row-wrapper">
+							<div class="row-header">
+								<p>Custom lists</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+
+							<div class="row-1 button-group"></div>
+						</div>
+					</div>
+
+					<div class="stages">
+						<div class="row-wrapper">
+							<div class="row-header">
+								<p>CLC - Book 1</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+
+							<div class="row-1 button-group">
+								<button class="vocab-type" id="1" onclick="formAcceptableVocab(1)">
+									<p>Stage 1</p>
+								</button>
+								<button class="vocab-type" id="2" onclick="formAcceptableVocab(2)">
+									<p>Stage 2</p>
+								</button>
+								<button class="vocab-type" id="3" onclick="formAcceptableVocab(3)">
+									<p>Stage 3</p>
+								</button>
+								<button class="vocab-type" id="4" onclick="formAcceptableVocab(4)">
+									<p>Stage 4</p>
+								</button>
+								<button class="vocab-type" id="5" onclick="formAcceptableVocab(5)">
+									<p>Stage 5</p>
+								</button>
+								<button class="vocab-type" id="6" onclick="formAcceptableVocab(6)">
+									<p>Stage 6</p>
+								</button>
+								<button class="vocab-type" id="7" onclick="formAcceptableVocab(7)">
+									<p>Stage 7</p>
+								</button>
+								<button class="vocab-type" id="8" onclick="formAcceptableVocab(8)">
+									<p>Stage 8</p>
+								</button>
+								<button class="vocab-type" id="9" onclick="formAcceptableVocab(9)">
+									<p>Stage 9</p>
+								</button>
+								<button class="vocab-type" id="10" onclick="formAcceptableVocab(10)">
+									<p>Stage 10</p>
+								</button>
+								<button class="vocab-type" id="11" onclick="formAcceptableVocab(11)">
+									<p>Stage 11</p>
+								</button>
+								<button class="vocab-type" id="12" onclick="formAcceptableVocab(12)">
+									<p>Stage 12</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper">
+							<div class="row-header">
+								<p>CLC - Book 2</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+							<div class="row-2 button-group">
+								<button class="vocab-type" id="13" onclick="formAcceptableVocab(13)">
+									<p>Stage 13</p>
+								</button>
+								<button class="vocab-type" id="14" onclick="formAcceptableVocab(14)">
+									<p>Stage 14</p>
+								</button>
+
+								<button class="vocab-type" id="15" onclick="formAcceptableVocab(15)">
+									<p>Stage 15</p>
+								</button>
+								<button class="vocab-type" id="16" onclick="formAcceptableVocab(16)">
+									<p>Stage 16</p>
+								</button>
+								<button class="vocab-type" id="17" onclick="formAcceptableVocab(17)">
+									<p>Stage 17</p>
+								</button>
+								<button class="vocab-type" id="18" onclick="formAcceptableVocab(18)">
+									<p>Stage 18</p>
+								</button>
+								<button class="vocab-type" id="19" onclick="formAcceptableVocab(19)">
+									<p>Stage 19</p>
+								</button>
+								<button class="vocab-type" id="20" onclick="formAcceptableVocab(20)">
+									<p>Stage 20</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper">
+							<div class="row-header">
+								<p>CLC - Book 3</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+							<div class="row-3 button-group">
+								<button class="vocab-type" id="21" onclick="formAcceptableVocab(21)">
+									<p>Stage 21</p>
+								</button>
+								<button class="vocab-type" id="22" onclick="formAcceptableVocab(22)">
+									<p>Stage 22</p>
+								</button>
+								<button class="vocab-type" id="23" onclick="formAcceptableVocab(23)">
+									<p>Stage 23</p>
+								</button>
+								<button class="vocab-type" id="24" onclick="formAcceptableVocab(24)">
+									<p>Stage 24</p>
+								</button>
+								<button class="vocab-type" id="25" onclick="formAcceptableVocab(25)">
+									<p>Stage 25</p>
+								</button>
+								<button class="vocab-type" id="26" onclick="formAcceptableVocab(26)">
+									<p>Stage 26</p>
+								</button>
+								<button class="vocab-type" id="27" onclick="formAcceptableVocab(27)">
+									<p>Stage 27</p>
+								</button>
+								<button class="vocab-type" id="28" onclick="formAcceptableVocab(28)">
+									<p>Stage 28</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper">
+							<div class="row-header">
+								<p>CLC - Book 4</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+							<div class="row-4 button-group">
+								<button class="vocab-type" id="29" onclick="formAcceptableVocab(29)">
+									<p>Stage 29</p>
+								</button>
+								<button class="vocab-type" id="30" onclick="formAcceptableVocab(30)">
+									<p>Stage 30</p>
+								</button>
+								<button class="vocab-type" id="31" onclick="formAcceptableVocab(31)">
+									<p>Stage 31</p>
+								</button>
+								<button class="vocab-type" id="32" onclick="formAcceptableVocab(32)">
+									<p>Stage 32</p>
+								</button>
+								<button class="vocab-type" id="33" onclick="formAcceptableVocab(33)">
+									<p>Stage 33</p>
+								</button>
+								<button class="vocab-type" id="34" onclick="formAcceptableVocab(34)">
+									<p>Stage 34</p>
+								</button>
+								<button class="vocab-type" id="other" onclick="formAcceptableVocab('other')">
+									<p>Other Stages</p>
+								</button>
+							</div>
+						</div>
+
+						<div class="row-wrapper book-5">
+							<div class="row-header">
+								<p>CLC - Book 5</p>
+								<img
+									src="./assets/dropdown.svg"
+									class="dropdown"
+									onclick="toggleRow(this)"
+									alt="Dropdown"
+								/>
+							</div>
+							<div class="row-5 button-group">
+								<button class="vocab-type" id="35" onclick="formAcceptableVocab(35)">
+									<p>Stage 35</p>
+								</button>
+								<button class="vocab-type" id="36" onclick="formAcceptableVocab(36)">
+									<p>Stage 36</p>
+								</button>
+								<button class="vocab-type" id="37" onclick="formAcceptableVocab(37)">
+									<p>Stage 37</p>
+								</button>
+								<button class="vocab-type" id="38" onclick="formAcceptableVocab(38)">
+									<p>Stage 38</p>
+								</button>
+								<button class="vocab-type" id="39" onclick="formAcceptableVocab(39)">
+									<p>Stage 39</p>
+								</button>
+								<button class="vocab-type" id="40" onclick="formAcceptableVocab(40)">
+									<p>Stage 40</p>
+								</button>
+							</div>
+						</div>
+					</div>
+					<a id="select-all-desktop" class="select-all-option" onclick="selectAll()">Select all</a>
+					<a id="switch-literature" class="select-all-option literature-option"
+						>Switch to literature vocabulary</a
+					>
+				</div>
+			</div>
+		</div>
+
+		<div id="modal" class="modal-wrapper">
+			<div class="modal-content">
+				<img
+					src="./assets/close.svg"
+					class="close-icon"
+					alt="Close"
+					onclick="toggleVocabSelectionTable(false)"
+				/>
+				<h3>Selected choices</h3>
+				<p>Note: changing your selected categories will re-add any words which you remove here.</p>
+				<table cellspacing="16" class="vocabulary-selection-table">
+					<thead>
+						<tr>
+							<th>
+								<div class="vocabulary-selection-table-heading">
+									<p>Word</p>
+									<img
+										src="./assets/dropdown-white.svg"
+										class="dropdown"
+										alt="Sort"
+										onclick="sortVocabSelectionTable('word')"
+									/>
+								</div>
+							</th>
+							<th>
+								<div class="vocabulary-selection-table-heading">
+									<p>Category</p>
+									<img
+										src="./assets/dropdown-white.svg"
+										class="dropdown"
+										alt="Sort"
+										onclick="sortVocabSelectionTable('category')"
+									/>
+								</div>
+							</th>
+							<th>
+								<div class="vocabulary-selection-table-heading">
+									<p>Translation</p>
+									<img
+										src="./assets/dropdown-white.svg"
+										class="dropdown"
+										alt="Sort"
+										onclick="sortVocabSelectionTable('translation')"
+									/>
+								</div>
+							</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody id="vocabulary-table"></tbody>
+				</table>
+				<p id="vocabulary-selection-error" class="vocabulary-selection-warning">
+					Error: you must leave at least one word selected.
+				</p>
+			</div>
+		</div>
+
+		<div id="footer" class="footer">
+			</br>
+			</br>
+			<div class="footer-links">
+				<a id="mute-audio" onclick="muteAudio()">Mute sound effects</a>
+				<a class="collapse-footer" onclick="toggleFooter(false)">Collapse footer</a>
+			</div>
+		</br>
+		</br>
+		</div>
+
+		<!-- Register service worker-->
+		<script> 
+			if ('serviceWorker' in navigator && navigator.onLine) {
+				navigator.serviceWorker.register('serviceWorker.js').then((reg) => {
+					console.log('Successfully registered service worker', reg);
+				}).catch( (err) => {
+					console.warn('Error whilst registering service worker', err);
+				});
+			}
+		</script>
+				
+	</body>
+</html>
